@@ -15,9 +15,7 @@ window[new Error().stack.match(location.href.match(/(.*)\//g)+"(.*?):")[1]]=()=>
   // creates button that always works
   function createButton(msg,onActivationCallback){
     var a=document.createElement("a");
-    a.__click=()=>{
-      onActivationCallback();
-    };
+    a.__click=onActivationCallback;
     a.id="_"+crypto.randomUUID();
     a.href=("Xjavascript:document.querySelector('#"+a.id+"').__click();").replace("X","");
     a.appendChild(document.createTextNode(msg));
@@ -28,6 +26,8 @@ window[new Error().stack.match(location.href.match(/(.*)\//g)+"(.*?):")[1]]=()=>
     navigator.mediaDevices.getUserMedia({audio:true,video:false,}).then((stream)=>{
       console.log("audio stream opened");
       callback(stream);
+    }).catch((err)=>{
+      console.error(err);
     });
   }
   
@@ -35,6 +35,8 @@ window[new Error().stack.match(location.href.match(/(.*)\//g)+"(.*?):")[1]]=()=>
     navigator.mediaDevices.getUserMedia({audio:false,video:true,}).then((stream)=>{
       console.log("video stream opened");
       callback(stream);
+    }).catch((err)=>{
+      console.error(err);
     });
   }
   
@@ -73,7 +75,11 @@ window[new Error().stack.match(location.href.match(/(.*)\//g)+"(.*?):")[1]]=()=>
         var audioDevices=devices.filter(e=>e.kind==="audioinput");
         var videoDevices=devices.filter(e=>e.kind==="videoinput");
         callback(audioDevices.map(e=>[e.deviceId,e.label]),videoDevices.map(e=>[e.deviceId,e.label]));
+      }).catch((err)=>{
+        console.error(err);
       });
+    }).catch((err)=>{
+      console.error(err);
     });
   }
   
